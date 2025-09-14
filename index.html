@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Saurav Anand — Civil Engineering Portfolio</title>
+  <meta name="description" content="Portfolio of Saurav Anand — Civil Engineering student (Diploma completed, pursuing B.Tech). Projects, skills, animations, and contact." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --brand: 16 185 129;      /* Emerald */
+      --brand-2: 37 99 235;     /* Blue */
+      --accent: 34 211 238;     /* Cyan */
+      --bg-1: 7 12 22;          /* Deep navy */
+      --bg-2: 12 18 30;         /* Navy */
+      --card: 18 24 38;         /* Card */
+      --ring: 255 255 255;      /* Focus outline */
+      --elev: 0 20px 40px rgba(0,0,0,.35);
+    }
+    html, body { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background-color: rgb(var(--bg-1));
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .hover-raise {
+      transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, background .35s ease, border-color .35s ease;
+    }
+    .hover-raise:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--elev);
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .grad-text {
+      background: linear-gradient(135deg, rgb(var(--brand)) 0%, rgb(var(--brand-2)) 60%, rgb(var(--accent)) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .btn-shine { position: relative; overflow: hidden; isolation: isolate; }
+    .btn-shine::after {
+      content: "";
+      position: absolute; inset: -100% auto -100% -30%;
+      width: 40%; transform: rotate(25deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transition: transform .7s ease;
+    }
+    .btn-shine:hover::after { transform: translateX(250%) rotate(25deg); }
+
+    /* NAV underline */
+    .nav-link { position: relative; }
+    .nav-link::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: -8px;
+      height: 2px; border-radius: 999px; transform: scaleX(0); transform-origin: left;
+      background: linear-gradient(90deg, rgb(var(--brand)), rgb(var(--brand-2)));
+      transition: transform .35s ease;
+    }
+    .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); }
+
+    .focus-ring:focus-visible { outline: 3px solid rgba(var(--ring), .75); outline-offset: 2px; border-radius: .75rem; }
+    .icon-wrap { flex: 0 0 auto; width: 48px; height: 48px; }
+
+    /* Reveal animations */
+    .reveal { opacity: 0; transform: translateY(18px); filter: blur(4px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1), filter .7s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); filter: blur(0); }
+    .reveal-pop { opacity: 0; transform: translateY(16px) scale(.98); filter: blur(3px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1), filter .7s ease; }
+    .reveal-pop.show { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    .reveal-left { opacity: 0; transform: translateX(-22px); filter: blur(3px); transition: opacity .7s ease, transform .7s ease, filter .7s ease; }
+    .reveal-left.show { opacity: 1; transform: translateX(0); filter: blur(0); }
+    .reveal-right { opacity: 0; transform: translateX(22px); filter: blur(3px); transition: opacity .7s ease, transform .7s ease, filter .7s ease; }
+    .reveal-right.show { opacity: 1; transform: translateX(0); filter: blur(0); }
+
+    /* Tag pill */
+    .tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .35rem .6rem; border-radius: 999px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+      font-size: .8rem; color: #e5e7eb;
+    }
+
+    /* --- Timeline Path --- */
+    .timeline-container {
+      position: relative;
+      padding: 1rem 0;
+    }
+    .timeline-container::before {
+      content: '';
+      position: absolute;
+      left: 12px; /* Center of the 24px-wide icon-wrapper */
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background-color: rgba(255,255,255,0.1);
+    }
+    .timeline-item {
+      position: relative;
+    }
+    .timeline-icon-wrapper {
+      position: absolute;
+      left: 12px;
+      top: 4px;
+      transform: translateX(-50%);
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background-color: rgb(var(--bg-2));
+    }
+    
+    /* Project Details Expansion */
+    #project-detail-container {
+        grid-column: 1 / -1;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), padding 0.6s ease;
+        padding: 0;
+    }
+    #project-detail-container.active {
+        max-height: 800px; /* Adjust as needed */
+        padding: 1.5rem 0 0 0;
+    }
+    
+    /* --- Image Scroller --- */
+    .scroller {
+      -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+      mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    }
+    .scroller__inner {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1.5rem;
+      padding-block: 1rem;
+    }
+    .scroller[data-animated="true"] .scroller__inner {
+      width: max-content;
+      animation: scroll 40s linear infinite;
+    }
+    .scroller__inner img {
+      width: 350px;
+      height: 220px;
+      object-fit: cover;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    @keyframes scroll {
+      to {
+        transform: translate(calc(-50% - 0.75rem));
+      }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .spinner {
+      animation: spin 1s linear infinite;
+    }
+    .btn-state-feedback {
+      transition: background-color .3s, border-color .3s;
+    }
+
+  </style>
+</head>
+<body class="text-slate-200 antialiased">
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- NAVBAR -->
+  <header class="sticky top-0 z-50 backdrop-blur-md">
+    <div class="glass">
+      <nav class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <a href="#home" class="flex items-center gap-3 focus-ring">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400/90 to-blue-500/90 grid place-items-center text-slate-900 font-extrabold">SA</div>
+          <span class="text-slate-100 font-semibold">Saurav Anand</span>
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#about" class="nav-link text-slate-200 hover:text-white focus-ring">About</a>
+          <a href="#projects" class="nav-link text-slate-200 hover:text-white focus-ring">Projects</a>
+          <a href="#skills" class="nav-link text-slate-200 hover:text-white focus-ring">Skills</a>
+          <a href="#timeline" class="nav-link text-slate-200 hover:text-white focus-ring">Timeline</a>
+          <a href="#contact" class="nav-link text-slate-200 hover:text-white focus-ring">Contact</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="#contact" class="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-2 hover:from-emerald-400 hover:to-blue-500 focus-ring">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H5.17L4 17.17V4z" stroke="white" stroke-width="1.5" stroke-linecap="round"/><path d="M4 5l8 6 8-6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Contact
+          </a>
+          <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-white/10 focus-ring" aria-label="Open menu">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-white"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </nav>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden md:hidden glass mx-4 rounded-xl mt-2">
+      <div class="px-4 py-3 flex flex-col gap-2">
+        <a href="#about" class="py-2 px-3 rounded-lg hover:bg-white/10">About</a>
+        <a href="#projects" class="py-2 px-3 rounded-lg hover:bg-white/10">Projects</a>
+        <a href="#skills" class="py-2 px-3 rounded-lg hover:bg-white/10">Skills</a>
+        <a href="#timeline" class="py-2 px-3 rounded-lg hover:bg-white/10">Timeline</a>
+        <a href="#contact" class="py-2 px-3 rounded-lg hover:bg-white/10">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="relative">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-sm text-slate-200 mb-5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Diploma completed • B.Tech in progress
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
+            Hi, I’m <span class="grad-text">Saurav Anand</span>
+            <span class="block text-2xl sm:text-3xl lg:text-4xl font-semibold text-emerald-400 mt-2">Civil Engineer & BIM Modeller</span>
+          </h1>
+          <p class="mt-5 text-slate-300 text-lg leading-relaxed">
+            Passionate about designing, site execution, and sustainable materials.
+            I craft real‑world constraints into bold, build‑ready designs.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="#projects" class="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-5 py-3 hover:from-emerald-400 hover:to-blue-500 focus-ring">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              View Projects
+            </a>
+            <button id="downloadResumeBtn" class="btn-state-feedback inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-white hover:bg-white/10 focus-ring w-[190px] h-[50px]">
+              <span id="btn-content-wrapper" class="inline-flex items-center gap-2 transition-opacity duration-300">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Download Resume</span>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="reveal-right">
+          <div class="relative group aspect-[4/3] max-w-lg mx-auto glass rounded-2xl hover-raise overflow-hidden">
+              <img src="https://placehold.co/600x450/070c16/e5e7eb?text=Modern+Construction"
+                   alt="Modern building construction site"
+                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                   onerror="this.onerror=null;this.src='https://placehold.co/600x450/070c16/e5e7eb?text=Image+Not+Found';">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              <div class="absolute bottom-4 left-4 text-white">
+                  <h3 class="font-bold text-lg">Innovative Engineering</h3>
+                  <p class="text-sm text-slate-300">Bringing blueprints to life.</p>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT ME -->
+  <section id="about" class="relative">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+          <div class="grid md:grid-cols-5 gap-12 items-center">
+              <div class="md:col-span-2 reveal-left">
+                  <div class="relative aspect-square max-w-sm mx-auto glass rounded-2xl hover-raise overflow-hidden p-4">
+                      <img src="https://placehold.co/400x400/121826/e5e7eb?text=Saurav+Anand"
+                           alt="Portrait of Saurav Anand"
+                           class="w-full h-full object-cover rounded-xl"
+                           onerror="this.onerror=null;this.src='https://placehold.co/400x400/121826/e5e7eb?text=Photo';">
+                  </div>
+              </div>
+              <div class="md:col-span-3 reveal">
+                  <h2 class="text-3xl md:text-4xl font-bold mb-4"><span class="grad-text">About Me</span></h2>
+                  <p class="text-slate-300 leading-relaxed mb-4">
+                      I’m a dedicated and results-oriented Civil Engineering professional with a recently completed Diploma and currently pursuing a B.Tech degree. My passion lies in transforming complex designs into tangible structures, with a keen focus on structural integrity, project efficiency, and modern construction practices.
+                  </p>
+                  <p class="text-slate-300 leading-relaxed">
+                      I thrive in collaborative environments and enjoy the challenge of solving on-site problems. From drafting precise blueprints in AutoCAD to ensuring quality control on the ground, I am committed to contributing to projects that are built to last.
+                  </p>
+                   <div class="mt-8 flex flex-wrap gap-4">
+                       <a href="#contact" class="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-5 py-3 hover:from-emerald-400 hover:to-blue-500 focus-ring">Let's Connect</a>
+                       <a href="https://www.linkedin.com/in/saurav-anand3" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-white hover:bg-white/10 focus-ring">LinkedIn Profile</a>
+                   </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  
+  <!-- VISUAL SCROLLER -->
+  <section class="relative py-12 md:py-16 overflow-hidden">
+    <div class="reveal text-center mb-10 px-4">
+        <h2 class="text-3xl md:text-4xl font-bold"><span class="grad-text">Visual Showcase</span></h2>
+        <p class="mt-2 text-slate-300 max-w-2xl mx-auto">A glimpse into the engineering and design process.</p>
+    </div>
+    <div class="scroller">
+        <ul class="scroller__inner">
+            <li><img src="assets/showcase-1.jpg" alt="Blueprint design"></li>
+            <li><img src="assets/showcase-2.jpg" alt="3D BIM Model"></li>
+            <li><img src="assets/showcase-3.jpg" alt="Active construction site"></li>
+            <li><img src="assets/showcase-4.jpg" alt="Drone surveying land"></li>
+            <li><img src="assets/showcase-5.jpg" alt="Completed architectural building"></li>
+            <li><img src="assets/showcase-6.jpg" alt="Concept for sustainable design"></li>
+        </ul>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="relative">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div class="reveal flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold"><span class="grad-text">Featured Projects</span></h2>
+          <p class="text-slate-300 mt-2 max-w-2xl">A selection of my projects that demonstrate my skills in structural design, planning, and quality assurance.</p>
+        </div>
+        <div class="relative flex-shrink-0">
+            <select id="projectFilter" class="tag appearance-none w-full sm:w-48 pl-4 pr-10 py-2 bg-white/5 border-white/10 rounded-xl focus-ring cursor-pointer">
+                <option value="all">All Projects</option>
+                <option value="architectural">Architectural</option>
+                <option value="structural">Structural</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
+        </div>
+      </div>
+
+      <div id="projectGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Card 1 -->
+        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" data-tags="structural">
+          <div class="relative">
+              <img src="https://placehold.co/600x400/0c111d/10b981?text=G%2B2+Building" 
+                   alt="G+2 Residential Building Project" 
+                   class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
+                   onerror="this.onerror=null;this.src='https://placehold.co/600x400/0c111d/e5e7eb?text=Project+Image';">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          </div>
+          <div class="p-6">
+              <div class="tag mb-2 inline-block">Structural</div>
+              <h3 class="text-xl font-semibold text-white">G+2 Residential Building</h3>
+              <p class="mt-2 text-slate-300 text-sm h-16">Framing layout, slabs, and beam schedule with clear CAD sheets.</p>
+              <button class="details-btn mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
+                  View Details
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+          </div>
+          <!-- Hidden Detail Content -->
+          <div class="project-full-details hidden">
+            <h4 class="font-bold text-lg text-white mb-2">Key Responsibilities:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-300 mb-4">
+              <li>Developed structural framing plans from architectural drawings.</li>
+              <li>Created detailed reinforcement schedules for beams, columns, and slabs.</li>
+              <li>Ensured all drawings complied with standard building codes.</li>
+            </ul>
+            <h4 class="font-bold text-lg text-white mb-2">Tools Used:</h4>
+            <div class="flex flex-wrap gap-2">
+                <span class="tag">AutoCAD</span><span class="tag">Structural Codes (IS)</span><span class="tag">Excel</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" data-tags="architectural">
+          <div class="relative">
+              <img src="https://placehold.co/600x400/0c111d/3b82f6?text=Community+Hall" 
+                   alt="Community Hall BOQ Project" 
+                   class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
+                   onerror="this.onerror=null;this.src='https://placehold.co/600x400/0c111d/e5e7eb?text=Project+Image';">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          </div>
+          <div class="p-6">
+              <div class="tag mb-2 inline-block">Architectural</div>
+              <h3 class="text-xl font-semibold text-white">Community Hall Planning</h3>
+              <p class="mt-2 text-slate-300 text-sm h-16">Quantity takeoff, cost estimation, and material rate analysis.</p>
+              <button class="details-btn mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">
+                  View Details
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+          </div>
+          <!-- Hidden Detail Content -->
+          <div class="project-full-details hidden">
+            <h4 class="font-bold text-lg text-white mb-2">Key Responsibilities:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-300 mb-4">
+              <li>Calculated material quantities (concrete, steel, brickwork) from drawings.</li>
+              <li>Performed rate analysis based on current market values for labor and materials.</li>
+              <li>Prepared a comprehensive Bill of Quantities (BOQ) document.</li>
+            </ul>
+            <h4 class="font-bold text-lg text-white mb-2">Tools Used:</h4>
+            <div class="flex flex-wrap gap-2">
+                <span class="tag">MS Excel</span><span class="tag">AutoCAD (for measurements)</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" data-tags="structural">
+          <div class="relative">
+              <img src="https://placehold.co/600x400/0c111d/06b6d4?text=QA+Checklist" 
+                   alt="Site QA Checklist Project" 
+                   class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
+                   onerror="this.onerror=null;this.src='https://placehold.co/600x400/0c111d/e5e7eb?text=Project+Image';">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          </div>
+          <div class="p-6">
+              <div class="tag mb-2 inline-block">Structural</div>
+              <h3 class="text-xl font-semibold text-white">Site QA Checklist</h3>
+              <p class="mt-2 text-slate-300 text-sm h-16">Overseeing concrete testing, steel checks, and safety compliance.</p>
+              <button class="details-btn mt-4 inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                  View Details
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+          </div>
+          <!-- Hidden Detail Content -->
+          <div class="project-full-details hidden">
+            <h4 class="font-bold text-lg text-white mb-2">Key Responsibilities:</h4>
+            <ul class="list-disc list-inside space-y-1 text-slate-300 mb-4">
+              <li>Drafted a checklist for on-site quality assurance procedures.</li>
+              <li>Included protocols for slump tests, cube testing, and rebar inspection.</li>
+              <li>Outlined mandatory safety measures for excavation and formwork.</li>
+            </ul>
+            <h4 class="font-bold text-lg text-white mb-2">Tools Used:</h4>
+            <div class="flex flex-wrap gap-2">
+                <span class="tag">MS Word</span><span class="tag">Indian Standards</span><span class="tag">Safety Manuals</span>
+            </div>
+          </div>
+        </article>
+        
+        <!-- This container will be used to show the details -->
+        <div id="project-detail-container"></div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="relative">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div class="reveal text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold"><span class="grad-text">Skills & Tools</span></h2>
+        <p class="mt-2 text-slate-300 max-w-2xl mx-auto">My technical toolkit for bringing engineering projects to life, from design to execution.</p>
+      </div>
+      
+      <div class="space-y-12">
+
+        <!-- Subsection 1: Software Proficiency -->
+        <div class="reveal">
+          <h3 class="text-xl font-semibold text-white mb-5 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+                <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </span>
+            Software Proficiency
+          </h3>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-emerald-400"><path d="M3 12l9-9 9 9-9 9-9-9z"/><path d="M12 22V12L3 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 3L12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">AutoCAD</div>
+                <div class="text-sm text-slate-400">2D Drafting & Documentation</div>
+              </div>
+            </div>
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .05s">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-emerald-400"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Revit</div>
+                <div class="text-sm text-slate-400">3D BIM Modeling</div>
+              </div>
+            </div>
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .1s">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-emerald-400"><path d="M20.59 5.41L19.17 4 12 11.17 4.83 4 3.41 5.41 10.59 12.59 3.41 19.77 4.83 21.18 12 13.99 19.17 21.18 20.59 19.77 13.41 12.59 20.59 5.41z" stroke="currentColor" stroke-width="1.5"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">MS Excel</div>
+                <div class="text-sm text-slate-400">Data Analysis & BOQs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Subsection 2: Technical Skills -->
+        <div class="reveal">
+          <h3 class="text-xl font-semibold text-white mb-5 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-blue-500/15 grid place-items-center flex-shrink-0">
+               <svg class="w-5 h-5 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </span>
+            Technical Skills
+          </h3>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .15s">
+              <div class="w-12 h-12 rounded-lg bg-blue-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-blue-400"><path d="M4 20V7l8-4 8 4v13" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M9 20v-6h6v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Structural Design</div>
+                <div class="text-sm text-slate-400">RC Component Analysis</div>
+              </div>
+            </div>
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .2s">
+              <div class="w-12 h-12 rounded-lg bg-blue-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-blue-400"><path d="M13 2L3 12l9 10 9-10-9-10z"/><path d="M3 22l9-9 9 9-9 9-9-9z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Quality Assurance</div>
+                <div class="text-sm text-slate-400">Material Testing & Checks</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subsection 3: Site Skills -->
+        <div class="reveal">
+          <h3 class="text-xl font-semibold text-white mb-5 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-cyan-500/15 grid place-items-center flex-shrink-0">
+               <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12.55C2 12.55 5.24 16 12 16s10-3.45 10-3.45S19.53 8 12 8s-10 4.55-10 4.55z"></path><path d="M12 20a2.5 2.5 0 002.5-2.5V16h-5v1.5A2.5 2.5 0 0012 20z"></path></svg>
+            </span>
+            Site Skills
+          </h3>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .25s">
+              <div class="w-12 h-12 rounded-lg bg-cyan-500/15 grid place-items-center flex-shrink-0">
+                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-cyan-400"><path d="M7 20V10a5 5 0 0 1 10 0v10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M5 20h14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Site Safety</div>
+                <div class="text-sm text-slate-400">On-site Protocol Enforcement</div>
+              </div>
+            </div>
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .3s">
+              <div class="w-12 h-12 rounded-lg bg-cyan-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-cyan-400"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="1.5"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Project Planning</div>
+                <div class="text-sm text-slate-400">Task Scheduling Basics</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Subsection 4: Professional Skills -->
+        <div class="reveal">
+          <h3 class="text-xl font-semibold text-white mb-5 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+               <svg class="w-5 h-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </span>
+            Professional Skills
+          </h3>
+          <div class="grid md:grid-cols-2 gap-5">
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .35s">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-emerald-400"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Teamwork</div>
+                <div class="text-sm text-slate-400">Collaborative Project Execution</div>
+              </div>
+            </div>
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .4s">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-emerald-400"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Problem Solving</div>
+                <div class="text-sm text-slate-400">On-site & Design Challenges</div>
+              </div>
+            </div>
+            <div class="glass rounded-xl p-4 flex items-center gap-4 hover-raise reveal-pop" style="transition-delay: .45s">
+              <div class="w-12 h-12 rounded-lg bg-emerald-500/15 grid place-items-center flex-shrink-0">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-emerald-400"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="4" y1="22" x2="4" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="font-semibold text-white">Leadership</div>
+                <div class="text-sm text-slate-400">Team & Task Guidance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section id="timeline" class="relative">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div class="reveal text-center mb-10">
+        <h2 class="text-3xl md:text-4xl font-bold"><span class="grad-text">Education & Experience</span></h2>
+        <p class="mt-2 text-slate-300">My professional journey and key milestones.</p>
+      </div>
+
+      <div class="timeline-container max-w-3xl mx-auto">
+        <!-- Item 1: Matriculation -->
+        <div class="timeline-item reveal-pop pb-10 pl-10">
+          <div class="timeline-icon-wrapper border-2 border-emerald-500">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-emerald-500"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 0 1-12.32 0L12 14z"/><path d="M3 12v6l9 5 9-5v-6l-9 5-9-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="glass rounded-xl p-5 hover-raise">
+            <div class="text-sm text-slate-400 mb-1">2021 – 2022</div>
+            <h3 class="font-semibold text-white">Matriculation (10th Grade)</h3>
+            <p class="text-slate-300 text-sm mt-1">Successfully completed matriculation with an aggregate of 92.6%.</p>
+          </div>
+        </div>
+        <!-- Item 2: Diploma -->
+        <div class="timeline-item reveal-pop pb-10 pl-10">
+          <div class="timeline-icon-wrapper border-2 border-blue-500">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-blue-500"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 0 1-12.32 0L12 14z"/><path d="M3 12v6l9 5 9-5v-6l-9 5-9-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="glass rounded-xl p-5 hover-raise">
+            <div class="text-sm text-slate-400 mb-1">2022 – 2025</div>
+            <h3 class="font-semibold text-white">Diploma in Civil Engineering</h3>
+            <p class="text-slate-300 text-sm mt-1">Completed a comprehensive program focusing on core civil engineering principles, including structural analysis, designing, and materials science.</p>
+          </div>
+        </div>
+        <!-- Item 3: Internship -->
+        <div class="timeline-item reveal-pop pb-10 pl-10">
+          <div class="timeline-icon-wrapper border-2 border-cyan-500">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-cyan-500"><path d="M20 6h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zM10 4h4v2h-4V4zm10 17H4V8h16v13z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="glass rounded-xl p-5 hover-raise">
+            <div class="text-sm text-slate-400 mb-1">Summer 2024</div>
+            <h3 class="font-semibold text-white">Site Engineering Intern</h3>
+            <p class="text-slate-300 text-sm mt-1">Developed practical site engineering skills by overseeing structural work, managing materials, coordinating project tasks, and enforcing quality and safety standards.</p>
+          </div>
+        </div>
+        <!-- Item 4: B.Tech -->
+        <div class="timeline-item reveal-pop pl-10">
+          <div class="timeline-icon-wrapper border-2 border-emerald-500">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-emerald-500"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="glass rounded-xl p-5 hover-raise">
+            <div class="text-sm text-slate-400 mb-1">2025 Onwards</div>
+            <h3 class="font-semibold text-white">Pursuing B.Tech in Civil Engineering</h3>
+            <p class="text-slate-300 text-sm mt-1">Currently pursuing my degree to specialize in advanced structural design and sustainable infrastructure.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT (Demo) -->
+  <section id="contact" class="relative">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <div class="reveal text-center mb-8">
+        <h2 class="text-3xl md:text-4xl font-bold"><span class="grad-text">Contact</span></h2>
+        <p class="mt-2 text-slate-300">Send a message — this is a demo only.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <form id="contactForm" class="glass rounded-2xl p-6 hover-raise">
+          <div class="mb-4">
+            <label class="block text-sm text-slate-300 mb-2">Name</label>
+            <input type="text" required class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder:text-slate-400 focus-ring" placeholder="Your name">
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm text-slate-300 mb-2">Email</label>
+            <input type="email" required class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder:text-slate-400 focus-ring" placeholder="you@example.com">
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm text-slate-300 mb-2">Message</label>
+            <textarea required rows="5" class="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder:text-slate-400 focus-ring" placeholder="How can I help?"></textarea>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-slate-400">Demo only — no email is sent.</div>
+            <button class="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-5 py-3 hover:from-emerald-400 hover:to-blue-500 focus-ring" type="submit">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Send Message
+            </button>
+          </div>
+        </form>
+
+        <div class="glass rounded-2xl p-6 hover-raise reveal-right">
+          <h3 class="font-semibold text-white mb-4">Reach Me</h3>
+          <div class="space-y-3 text-slate-300">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-lg bg-emerald-500/15 grid place-items-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 16.92V21a1 1 0 0 1-1.09 1 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 3 3.09 1 1 0 0 1 4 2h4.09a1 1 0 0 1 1 .75 12.66 12.66 0 0 0 .7 2.11 1 1 0 0 1-.23 1.05L8.09 7.91a16 16 0 0 0 6 6l1.98-1.47a1 1 0 0 1 1.05-.23 12.66 12.66 0 0 0 2.11.7 1 1 0 0 1 .75 1V16.92z" stroke="rgb(16,185,129)" stroke-width="1.5"/></svg>
+              </span>
+              <span>+91 98356 09710</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-lg bg-blue-500/15 grid place-items-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H5.17L4 17.17V4z" stroke="rgb(59,130,246)" stroke-width="1.5"/><path d="M4 5l8 6 8-6" stroke="rgb(59,130,246)" stroke-width="1.5"/></svg>
+              </span>
+              <span>sauravanand0307@gmail.com</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-lg bg-cyan-500/15 grid place-items-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 6h16M4 18h16" stroke="rgb(34,211,238)" stroke-width="1.5"/></svg>
+              </span>
+              <span>Available: Remote or On-site</span>
+            </div>
+          </div>
+          <div class="mt-6 border-t border-white/10 pt-5">
+            <h4 class="font-semibold text-white mb-3">Find me on</h4>
+            <div class="flex items-center gap-4">
+              <a href="https://www.linkedin.com/in/saurav-anand3" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 border border-white/20 text-slate-300 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:text-white hover:scale-110 focus-ring">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              </a>
+              <a href="https://www.instagram.com/sauravanand._/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 border border-white/20 text-slate-300 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:text-white hover:scale-110 focus-ring">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.85s-.012 3.584-.07 4.85c-.148 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069s-3.584-.012-4.85-.07c-3.252-.148-4.771-1.699-4.919-4.92-.058-1.265-.069-1.644-.069-4.849s.012-3.584.07-4.85c.148-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.85-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948s.014 3.667.072 4.947c.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072s3.667-.014 4.947-.072c4.358-.2 6.78-2.618 6.98-6.98.059-1.281.073-1.689.073-4.948s-.014-3.667-.072-4.947c-.2-4.358-2.618-6.78-6.98-6.98-1.281-.059-1.689-.073-4.948-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.79 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44 1.441-.645 1.441-1.44-.645-1.44-1.441-1.44z"/></svg>
+              </a>
+              <a href="https://x.com/sauravanand_" target="_blank" rel="noopener noreferrer" aria-label="X" class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 border border-white/20 text-slate-300 transition-all duration-300 hover:bg-white/20 hover:border-white/30 hover:text-white hover:scale-110 focus-ring">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="relative">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-10">
+      <div class="glass rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-400/90 to-blue-500/90 grid place-items-center text-slate-900 font-extrabold">SA</div>
+          <div class="text-slate-300 text-sm">© <span id="year"></span> Saurav Anand — Civil Engineering</div>
+        </div>
+        <div class="text-sm text-slate-400">Built with love and careful detailing.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // --- Animated Background Canvas ---
+    const canvas = document.getElementById('bg-canvas');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let gridSize = 40;
+        let lines = [];
+        let points = [];
+
+        function setupCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            lines = [];
+            for (let i = 0; i < 5; i++) {
+                lines.push(createNewLine());
+            }
+
+            points = [];
+            const pointCount = Math.floor((canvas.width * canvas.height) / 10000);
+            for(let i=0; i<pointCount; i++) {
+                points.push(createNewPoint());
+            }
+        }
+        
+        function createNewLine() {
+            const isVertical = Math.random() > 0.5;
+            let line = {
+                x: Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize,
+                y: Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize,
+                length: (Math.floor(Math.random() * 8) + 4) * gridSize,
+                progress: 0,
+                speed: Math.random() * 0.4 + 0.2,
+                vertical: isVertical
+            };
+            if(isVertical) {
+                line.x = Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize;
+                line.y = -line.length;
+            } else {
+                line.y = Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize;
+                line.x = -line.length;
+            }
+            return line;
+        }
+        
+        function createNewPoint() {
+            return {
+                x: Math.floor(Math.random() * (canvas.width / gridSize)) * gridSize,
+                y: Math.floor(Math.random() * (canvas.height / gridSize)) * gridSize,
+                opacity: 0,
+                fadeSpeed: Math.random() * 0.01 + 0.005,
+                fadingIn: true,
+                radius: Math.random() * 1.5 + 1
+            };
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw static grid
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // Draw and update animated lines
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.4)';
+            ctx.lineWidth = 1;
+            lines.forEach((line, index) => {
+                line.progress += line.speed;
+                
+                let startX, startY, endX, endY;
+
+                if (line.vertical) {
+                    startX = line.x;
+                    endX = line.x;
+                    startY = line.y;
+                    endY = line.y + line.progress;
+                    if(endY > line.y + line.length) endY = line.y + line.length;
+                } else {
+                    startY = line.y;
+                    endY = line.y;
+                    startX = line.x;
+                    endX = line.x + line.progress;
+                    if(endX > line.x + line.length) endX = line.x + line.length;
+                }
+
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+
+                if (line.progress >= line.length * 1.5) { // Reset after a delay
+                    lines[index] = createNewLine();
+                }
+            });
+            
+            // Draw and update glowing points
+            points.forEach((point, index) => {
+                if (point.fadingIn) {
+                    point.opacity += point.fadeSpeed;
+                    if (point.opacity >= 0.7) point.fadingIn = false;
+                } else {
+                    point.opacity -= point.fadeSpeed;
+                    if (point.opacity <= 0) points[index] = createNewPoint();
+                }
+                
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, point.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(34, 211, 238, ${point.opacity})`;
+                ctx.fill();
+            });
+
+
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('resize', setupCanvas);
+        
+        setupCanvas();
+        animateCanvas();
+    }
+
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+      // Close on navigation
+      mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+    }
+
+    // Active nav link on scroll
+    const sections = ['home','about','projects','skills','timeline','contact'].map(id => document.getElementById(id));
+    const navLinks = Array.from(document.querySelectorAll('header .nav-link'));
+    const setActive = () => {
+      let current = 'home';
+      const scrollPos = window.scrollY + 120;
+      sections.forEach(sec => {
+        if (sec && sec.offsetTop <= scrollPos) current = sec.id;
+      });
+      navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + current));
+    };
+    window.addEventListener('scroll', setActive); setActive();
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal, .reveal-pop, .reveal-left, .reveal-right').forEach(el => io.observe(el));
+
+    // Project filter
+    const projectFilter = document.getElementById('projectFilter');
+    const projectCards = document.querySelectorAll('.project-card');
+    if (projectFilter) {
+        projectFilter.addEventListener('change', (e) => {
+            const f = e.target.value;
+            projectCards.forEach(card => {
+                const tags = card.getAttribute('data-tags');
+                const show = f === 'all' || tags.includes(f);
+                card.style.display = show ? 'block' : 'none';
+            });
+            closeProjectDetails();
+        });
+    }
+
+    // --- New Project Detail Expansion Logic ---
+    const projectGrid = document.getElementById('projectGrid');
+    const detailContainer = document.getElementById('project-detail-container');
+    let currentOpenCard = null;
+
+    projectGrid.addEventListener('click', (e) => {
+        const detailsBtn = e.target.closest('.details-btn');
+        if (!detailsBtn) return;
+
+        const card = detailsBtn.closest('.project-card');
+        const detailsContent = card.querySelector('.project-full-details').innerHTML;
+        const cardTitle = card.querySelector('h3').textContent;
+
+        if (currentOpenCard === card) {
+            closeProjectDetails();
+        } else {
+            currentOpenCard = card;
+            openProjectDetails(detailsContent, cardTitle);
+            
+            // Highlight active card
+            projectGrid.querySelectorAll('.project-card').forEach(c => c.classList.remove('border-emerald-400/50'));
+            card.classList.add('border-emerald-400/50');
+        }
+    });
+    
+    function openProjectDetails(content, title) {
+        detailContainer.innerHTML = `
+            <div class="glass rounded-2xl p-6 relative reveal-pop show">
+                <button id="closeProjectDetail" class="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/10 focus-ring" aria-label="Close">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" class="text-white"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </button>
+                <h3 class="text-2xl font-bold grad-text mb-4">${title}</h3>
+                ${content}
+            </div>
+        `;
+        projectGrid.appendChild(detailContainer);
+        detailContainer.classList.add('active');
+
+        document.getElementById('closeProjectDetail').addEventListener('click', closeProjectDetails);
+        
+        // Wait for the animation to start before scrolling
+        setTimeout(() => {
+            detailContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 100);
+    }
+
+    function closeProjectDetails() {
+        detailContainer.classList.remove('active');
+        if (currentOpenCard) {
+            currentOpenCard.classList.remove('border-emerald-400/50');
+            currentOpenCard = null;
+        }
+        
+        // Clear content after animation
+        setTimeout(() => {
+            detailContainer.innerHTML = '';
+        }, 600);
+    }
+    
+    // --- Enhanced Resume Download Handler ---
+    const downloadBtn = document.getElementById('downloadResumeBtn');
+    const btnContentWrapper = document.getElementById('btn-content-wrapper');
+
+    if (downloadBtn && btnContentWrapper) {
+        const originalBtnContent = btnContentWrapper.innerHTML;
+
+        const setButtonState = (state, text, icon) => {
+            btnContentWrapper.innerHTML = `${icon} <span>${text}</span>`;
+            downloadBtn.disabled = state === 'loading';
+            
+            // Reset classes first
+            downloadBtn.classList.remove('border-emerald-500/50', 'bg-emerald-500/20', 'border-red-500/50', 'bg-red-500/20');
+            
+            if (state === 'success') {
+                downloadBtn.classList.add('border-emerald-500/50', 'bg-emerald-500/20');
+            } else if (state === 'error') {
+                downloadBtn.classList.add('border-red-500/50', 'bg-red-500/20');
+            }
+        };
+
+        const spinnerIcon = `<svg class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`;
+        const successIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        const errorIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+
+        downloadBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            setButtonState('loading', 'Downloading...', spinnerIcon);
+            showToast('Preparing download...');
+            
+            const fileName = 'Saurav Anand Resume.pdf';
+            const fileUrl = encodeURIComponent(fileName);
+
+            try {
+                const response = await fetch(fileUrl);
+                if (!response.ok) {
+                    throw new Error(`Network response was not ok. Status: ${response.status}`);
+                }
+                
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = fileName; // Use the original filename for the download attribute
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                window.URL.revokeObjectURL(url);
+                a.remove();
+                
+                setButtonState('success', 'Success!', successIcon);
+
+            } catch (error) {
+                console.error('Download failed:', error);
+                showToast(`Download failed. Please try again.`);
+                setButtonState('error', 'Failed', errorIcon);
+            } finally {
+                setTimeout(() => {
+                    downloadBtn.disabled = false;
+                    downloadBtn.classList.remove('border-emerald-500/50', 'bg-emerald-500/20', 'border-red-500/50', 'bg-red-500/20');
+                    btnContentWrapper.innerHTML = originalBtnContent;
+                }, 2500);
+            }
+        });
+    }
+
+    // Contact form demo (shows a friendly toast)
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast('Thanks! Your message was captured locally (demo only).');
+      form.reset();
+    });
+
+    // Toast notification
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.textContent = msg;
+      t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-2 rounded-xl shadow-xl z-[70]';
+      document.body.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .6s'; }, 1800);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // Scroller Animation
+    const scrollers = document.querySelectorAll(".scroller");
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      addAnimation();
+    }
+    function addAnimation() {
+      scrollers.forEach((scroller) => {
+        scroller.setAttribute("data-animated", true);
+        const scrollerInner = scroller.querySelector(".scroller__inner");
+        const scrollerContent = Array.from(scrollerInner.children);
+        scrollerContent.forEach((item) => {
+          const duplicatedItem = item.cloneNode(true);
+          duplicatedItem.setAttribute("aria-hidden", true);
+          scrollerInner.appendChild(duplicatedItem);
+        });
+      });
+    }
+
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
