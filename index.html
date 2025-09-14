@@ -334,14 +334,8 @@
         <p class="mt-2 text-slate-300 max-w-2xl mx-auto">A glimpse into the engineering and design process.</p>
     </div>
     <div class="scroller">
-        <ul class="scroller__inner">
-            <li><img src="assets/showcase-1.jpg" alt="Blueprint design"></li>
-            <li><img src="assets/showcase-2.jpg" alt="3D BIM Model"></li>
-            <li><img src="assets/showcase-3.jpg" alt="Active construction site"></li>
-            <li><img src="assets/showcase-4.jpg" alt="Drone surveying land"></li>
-            <li><img src="assets/showcase-5.jpg" alt="Completed architectural building"></li>
-            <li><img src="assets/showcase-6.jpg" alt="Concept for sustainable design"></li>
-        </ul>
+        <!-- This list is now populated by the JavaScript below -->
+        <ul id="showcase-list" class="scroller__inner"></ul>
     </div>
   </section>
 
@@ -1111,56 +1105,120 @@
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
     
-    // Scroller Animation
-    const scrollers = document.querySelectorAll(".scroller");
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      addAnimation();
-    }
-    function addAnimation() {
-      scrollers.forEach((scroller) => {
-        scroller.setAttribute("data-animated", true);
-        const scrollerInner = scroller.querySelector(".scroller__inner");
-        const scrollerContent = Array.from(scrollerInner.children);
-        scrollerContent.forEach((item) => {
-          const duplicatedItem = item.cloneNode(true);
-          duplicatedItem.setAttribute("aria-hidden", true);
-          scrollerInner.appendChild(duplicatedItem);
-        });
-      });
-    }
-    
     // --- Lightbox Logic ---
     const lightbox = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightbox-img');
     const lightboxClose = document.getElementById('lightbox-close');
-    const scrollerImages = document.querySelectorAll('.scroller__inner li');
+    
+    // --- CONTENT YOU CAN EASILY EDIT ---
 
+    // To change the images in the visual showcase, edit this list.
+    // - src: The path to your image in the 'assets' folder.
+    // - alt: A short description of the image.
+    const showcaseImages = [
+      { src: 'assets/showcase-1.jpg', alt: 'Blueprint design' },
+      { src: 'assets/showcase-2.jpg', alt: '3D BIM Model' },
+      { src: 'assets/showcase-3.jpg', alt: 'Active construction site' },
+      { src: 'assets/showcase-4.jpg', alt: 'Drone surveying land' },
+      { src: 'assets/showcase-5.jpg', alt: 'Completed architectural building' },
+      { src: 'assets/showcase-6.jpg', alt: 'Concept for sustainable design' }
+      // Add more images here like this:
+      // { src: 'assets/my-new-image.jpg', alt: 'A description' },
+    ];
+
+    // --- SCRIPT INITIALIZATION ---
+
+    // This function builds the showcase from the list above
+    function populateShowcase() {
+      const showcaseList = document.getElementById('showcase-list');
+      if (!showcaseList) return;
+
+      showcaseList.innerHTML = ''; // Clear existing images
+      showcaseImages.forEach(image => {
+        const listItem = document.createElement('li');
+        const img = document.createElement('img');
+        img.src = image.src;
+        img.alt = image.alt;
+        listItem.appendChild(img);
+        showcaseList.appendChild(listItem);
+      });
+
+      // After creating the images, re-initialize the animations and lightbox
+      initializeScroller();
+      initializeLightbox();
+    }
+    
+    // Call the function to build the showcase when the page loads
+    document.addEventListener('DOMContentLoaded', populateShowcase);
+
+
+    // --- DYNAMIC FUNCTIONS ---
+
+    function initializeScroller() {
+      const scrollers = document.querySelectorAll(".scroller");
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        scrollers.forEach((scroller) => {
+          scroller.setAttribute("data-animated", true);
+          const scrollerInner = scroller.querySelector(".scroller__inner");
+          const scrollerContent = Array.from(scrollerInner.children);
+          
+          // Only duplicate if not already done
+          if (scrollerContent.length <= showcaseImages.length) {
+            scrollerContent.forEach((item) => {
+              const duplicatedItem = item.cloneNode(true);
+              duplicatedItem.setAttribute("aria-hidden", true);
+              scrollerInner.appendChild(duplicatedItem);
+            });
+          }
+        });
+      }
+    }
+    
+    function initializeLightbox() {
+      const scrollerImages = document.querySelectorAll('.scroller__inner li');
+      scrollerImages.forEach(img => {
+        // Remove old event listener to prevent duplicates, then add a new one
+        img.removeEventListener('click', openLightbox);
+        img.addEventListener('click', openLightbox);
+      });
+
+      lightboxClose.removeEventListener('click', closeLightbox);
+      lightboxClose.addEventListener('click', closeLightbox);
+      
+      lightbox.removeEventListener('click', handleLightboxBackgroundClick);
+      lightbox.addEventListener('click', handleLightboxBackgroundClick);
+    }
+    
     const openLightbox = (e) => {
         const imgSrc = e.currentTarget.querySelector('img').src;
         lightboxImg.src = imgSrc;
         lightbox.classList.remove('hidden');
-        // Use a tiny timeout to allow the display property to apply before adding the class for the transition
         setTimeout(() => lightbox.classList.add('show'), 10);
         document.body.style.overflow = 'hidden';
     };
 
     const closeLightbox = () => {
         lightbox.classList.remove('show');
-        // Wait for the transition to finish before hiding it
         setTimeout(() => lightbox.classList.add('hidden'), 300);
         document.body.style.overflow = '';
     };
 
-    scrollerImages.forEach(img => img.addEventListener('click', openLightbox));
-    lightboxClose.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', (e) => {
-        // Close if the background is clicked, not the image itself
+    const showcaseImages = [
+      { src: 'assets/3d2gpb.png', alt: 'Blueprint design' },
+      { src: 'assets/3dd2gpb.png', alt: '3D BIM Model' },
+      { src: 'assets/3ddgpb.png', alt: 'Active construction site' },
+      { src: 'assets/AcademicFloorPlan.png', alt: 'Drone surveying land' },
+      { src: 'assets/Workshop.png', alt: 'Completed architectural building' },
+      { src: 'assets/fp.png', alt: 'Concept for sustainable design' },
+      // Add your new image on a new line like this:
+      { src: 'assets/my-project.jpg', alt: 'A photo of my new project' }
+    ];
+    const handleLightboxBackgroundClick = (e) => {
         if (e.target === lightbox) {
             closeLightbox();
         }
-    });
+    };
   </script>
 </body>
 </html>
-
 
