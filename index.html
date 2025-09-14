@@ -274,8 +274,7 @@
             <span class="block text-2xl sm:text-3xl lg:text-4xl font-semibold text-emerald-400 mt-2">Civil Engineer & BIM Modeller</span>
           </h1>
           <p class="mt-5 text-slate-300 text-lg leading-relaxed">
-            Passionate about designing, site execution, and sustainable materials.
-            I craft real‑world constraints into bold, build‑ready designs.
+            A Civil Engineer and BIM Modeller specializing in structural design and sustainable construction, turning complex blueprints into real-world structures.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a href="#projects" class="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-5 py-3 hover:from-emerald-400 hover:to-blue-500 focus-ring">
@@ -285,15 +284,15 @@
             <button id="downloadResumeBtn" class="btn-state-feedback inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-white hover:bg-white/10 focus-ring w-[190px] h-[50px]">
               <span id="btn-content-wrapper" class="inline-flex items-center gap-2 transition-opacity duration-300">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <span>Download Resume</span>
+                <span>Download CV</span>
               </span>
             </button>
           </div>
         </div>
         <div class="reveal-right">
-          <div class="relative group aspect-[4/3] max-w-lg mx-auto glass rounded-2xl hover-raise overflow-hidden">
-              <img src="https://placehold.co/600x450/070c16/e5e7eb?text=Modern+Construction"
-                   alt="Modern building construction site"
+          <div class="relative group aspect-[3/4] max-w-sm mx-auto glass rounded-2xl hover-raise overflow-hidden">
+              <img src="assets/saurav-anand.jpg"
+                   alt="Saurav Anand"
                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                    onerror="this.onerror=null;this.src='https://placehold.co/600x450/070c16/e5e7eb?text=Image+Not+Found';">
               <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
@@ -309,7 +308,7 @@
           <div class="grid md:grid-cols-5 gap-12 items-center">
               <div class="md:col-span-2 reveal-left">
                   <div class="relative aspect-square max-w-sm mx-auto glass rounded-2xl hover-raise overflow-hidden p-4">
-                      <img src="https://placehold.co/400x400/121826/e5e7eb?text=Saurav+Anand"
+                      <img src="assets/saurav-anand.jpg"
                            alt="Portrait of Saurav Anand"
                            class="w-full h-full object-cover rounded-xl"
                            onerror="this.onerror=null;this.src='https://placehold.co/400x400/121826/e5e7eb?text=Photo';">
@@ -333,7 +332,7 @@
   </section>
   
   <!-- VISUAL SCROLLER -->
-  <section class="relative py-12 md:py-16">
+  <section class="relative py-12 md:py-16 overflow-hidden">
     <div class="reveal text-center mb-10 px-4">
         <h2 class="text-3xl md:text-4xl font-bold"><span class="grad-text">Visual Showcase</span></h2>
         <p class="mt-2 text-slate-300 max-w-2xl mx-auto">A glimpse into the engineering and design process.</p>
@@ -1044,48 +1043,47 @@
         const successIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
         const errorIcon = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
-        downloadBtn.addEventListener('click', async (e) => {
+        downloadBtn.addEventListener('click', (e) => {
             e.preventDefault();
             
             setButtonState('loading', 'Downloading...', spinnerIcon);
-            showToast('Preparing download...');
             
-            const fileName = 'Saurav Anand Resume.pdf';
-            const fileUrl = fileName; // Directly use the filename
+            // Use a short timeout to let the UI update to the "loading" state
+            setTimeout(() => {
+                try {
+                    // The location of the file in the repository
+                    const fileUrl = 'assets/saurav-anand-resume.pdf';
+                    // The name the file will have when downloaded
+                    const fileName = 'Saurav Anand Resume.pdf';
 
-            try {
-                const response = await fetch(fileUrl);
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok. Status: ${response.status}`);
+                    // Create a temporary link element
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = fileUrl;
+                    a.download = fileName; 
+                    
+                    // Add the link to the page, click it, and then remove it
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    
+                    // Update button to success state
+                    setButtonState('success', 'Success!', successIcon);
+                    showToast('Download started!');
+
+                } catch (error) {
+                    console.error('Download failed:', error);
+                    showToast('Download failed. Please try again.');
+                    setButtonState('error', 'Failed', errorIcon);
+                } finally {
+                    // Reset the button back to its original state after a delay
+                    setTimeout(() => {
+                        downloadBtn.disabled = false;
+                        downloadBtn.classList.remove('border-emerald-500/50', 'bg-emerald-500/20', 'border-red-500/50', 'bg-red-500/20');
+                        btnContentWrapper.innerHTML = originalBtnContent;
+                    }, 2500);
                 }
-                
-                const blob = await response.blob();
-                const url = window.URL.createObjectURL(blob);
-                
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = url;
-                a.download = fileName; // Use the original filename for the download attribute
-                
-                document.body.appendChild(a);
-                a.click();
-                
-                window.URL.revokeObjectURL(url);
-                a.remove();
-                
-                setButtonState('success', 'Success!', successIcon);
-
-            } catch (error) {
-                console.error('Download failed:', error);
-                showToast(`Download failed. Please try again.`);
-                setButtonState('error', 'Failed', errorIcon);
-            } finally {
-                setTimeout(() => {
-                    downloadBtn.disabled = false;
-                    downloadBtn.classList.remove('border-emerald-500/50', 'bg-emerald-500/20', 'border-red-500/50', 'bg-red-500/20');
-                    btnContentWrapper.innerHTML = originalBtnContent;
-                }, 2500);
-            }
+            }, 200); // 200ms delay for UI update
         });
     }
 
@@ -1246,4 +1244,6 @@
   </script>
 </body>
 </html>
+
+
 
