@@ -891,12 +891,13 @@
     };
     window.addEventListener('scroll', setActive); setActive();
 
-    // Reveal on scroll
+    // Reveal on scroll - REPEATABLE ANIMATION
     const io = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('show');
-          io.unobserve(entry.target);
+        } else {
+          entry.target.classList.remove('show');
         }
       });
     }, { threshold: 0.15 });
@@ -1088,6 +1089,7 @@
   </script>
 </body>
 </html>
+
 
 
 
