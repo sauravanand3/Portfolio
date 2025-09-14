@@ -208,6 +208,15 @@
     .btn-state-feedback {
       transition: background-color .3s, border-color .3s;
     }
+    
+    /* Lazy load styles for faster page load */
+    .lazy {
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    .lazy.loaded {
+      opacity: 1;
+    }
   </style>
 </head>
 <body class="text-slate-200 antialiased">
@@ -288,10 +297,6 @@
                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                    onerror="this.onerror=null;this.src='https://placehold.co/600x450/070c16/e5e7eb?text=Image+Not+Found';">
               <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-              <div class="absolute bottom-4 left-4 text-white">
-                  <h3 class="font-bold text-lg">Innovative Engineering</h3>
-                  <p class="text-sm text-slate-300">Bringing blueprints to life.</p>
-              </div>
           </div>
         </div>
       </div>
@@ -1116,12 +1121,12 @@
     // - src: The path to your image in the 'assets' folder.
     // - alt: A short description of the image.
     const showcaseImages = [
-      { src: 'assets/showcase-1.jpg', alt: 'Blueprint design' },
-      { src: 'assets/showcase-2.jpg', alt: '3D BIM Model' },
-      { src: 'assets/showcase-3.jpg', alt: 'Active construction site' },
-      { src: 'assets/showcase-4.jpg', alt: 'Drone surveying land' },
-      { src: 'assets/showcase-5.jpg', alt: 'Completed architectural building' },
-      { src: 'assets/showcase-6.jpg', alt: 'Concept for sustainable design' }
+      { src: 'assets/3d2gpb.png', alt: 'Blueprint design' },
+      { src: 'assets/3dd2gpb.png', alt: '3D BIM Model' },
+      { src: 'assets/3ddgpb.png', alt: 'Active construction site' },
+      { src: 'assets/AcademicFloorPlan.png', alt: 'Floor plan design' },
+      { src: 'assets/Workshop.png', alt: 'Workshop layout' },
+      { src: 'assets/fp.png', alt: 'Final project render' }
       // Add more images here like this:
       // { src: 'assets/my-new-image.jpg', alt: 'A description' },
     ];
@@ -1137,15 +1142,23 @@
       showcaseImages.forEach(image => {
         const listItem = document.createElement('li');
         const img = document.createElement('img');
-        img.src = image.src;
+        
+        // --- LAZY LOADING IMPLEMENTATION ---
+        // We set a placeholder src and store the real one in data-src
+        img.classList.add('lazy');
+        img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"; // 1x1 transparent GIF
+        img.dataset.src = image.src;
+        // --- END OF IMPLEMENTATION ---
+        
         img.alt = image.alt;
         listItem.appendChild(img);
         showcaseList.appendChild(listItem);
       });
 
-      // After creating the images, re-initialize the animations and lightbox
+      // After creating the images, re-initialize the animations, lightbox, and lazy loading
       initializeScroller();
       initializeLightbox();
+      initializeLazyLoading();
     }
     
     // Call the function to build the showcase when the page loads
@@ -1189,8 +1202,30 @@
       lightbox.addEventListener('click', handleLightboxBackgroundClick);
     }
     
+    function initializeLazyLoading() {
+      const lazyImages = document.querySelectorAll('img.lazy');
+      
+      const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const image = entry.target;
+            image.src = image.dataset.src; // Load the real image
+            image.addEventListener('load', () => {
+              image.classList.add('loaded'); // Add class for fade-in effect
+            });
+            image.classList.remove('lazy');
+            observer.unobserve(image); // Stop observing once loaded
+          }
+        });
+      });
+
+      lazyImages.forEach(image => {
+        imageObserver.observe(image);
+      });
+    }
+
     const openLightbox = (e) => {
-        const imgSrc = e.currentTarget.querySelector('img').src;
+        const imgSrc = e.currentTarget.querySelector('img').dataset.src || e.currentTarget.querySelector('img').src;
         lightboxImg.src = imgSrc;
         lightbox.classList.remove('hidden');
         setTimeout(() => lightbox.classList.add('show'), 10);
@@ -1202,17 +1237,7 @@
         setTimeout(() => lightbox.classList.add('hidden'), 300);
         document.body.style.overflow = '';
     };
-
-    const showcaseImages = [
-      { src: 'assets/3d2gpb.png', alt: 'Blueprint design' },
-      { src: 'assets/3dd2gpb.png', alt: '3D BIM Model' },
-      { src: 'assets/3ddgpb.png', alt: 'Active construction site' },
-      { src: 'assets/AcademicFloorPlan.png', alt: 'Drone surveying land' },
-      { src: 'assets/Workshop.png', alt: 'Completed architectural building' },
-      { src: 'assets/fp.png', alt: 'Concept for sustainable design' },
-      // Add your new image on a new line like this:
-      { src: 'assets/my-project.jpg', alt: 'A photo of my new project' }
-    ];
+    
     const handleLightboxBackgroundClick = (e) => {
         if (e.target === lightbox) {
             closeLightbox();
