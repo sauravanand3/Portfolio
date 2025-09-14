@@ -148,6 +148,15 @@
       gap: 1.5rem;
       padding-block: 1rem;
     }
+    .scroller__inner li {
+      transition: transform .3s cubic-bezier(.2,.8,.2,1);
+      flex-shrink: 0;
+      position: relative;
+    }
+    .scroller__inner li:hover {
+      transform: scale(1.05);
+      z-index: 10;
+    }
     .scroller[data-animated="true"] .scroller__inner {
       width: max-content;
       animation: scroll 40s linear infinite;
@@ -156,11 +165,12 @@
       animation-play-state: paused;
     }
     .scroller__inner img {
-      width: 350px;
-      height: 220px;
+      width: 450px;
+      height: 280px;
       object-fit: cover;
       border-radius: 0.75rem;
       border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
     }
 
     @keyframes scroll {
@@ -168,6 +178,25 @@
         transform: translate(calc(-50% - 0.75rem));
       }
     }
+
+    /* Lightbox Styles */
+    #lightbox {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      pointer-events: none;
+    }
+    #lightbox.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    #lightbox-img {
+      transform: scale(0.9);
+      transition: transform 0.3s ease-in-out;
+    }
+    #lightbox.show #lightbox-img {
+      transform: scale(1);
+    }
+
 
     @keyframes spin {
       to { transform: rotate(360deg); }
@@ -736,6 +765,13 @@
     </div>
   </footer>
 
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <button id="lightbox-close" class="absolute top-4 right-4 text-white text-4xl z-10 leading-none focus-ring rounded-full w-10 h-10 hover:bg-white/10">&times;</button>
+    <img id="lightbox-img" src="" alt="Showcase Image" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+  </div>
+
+
   <script>
     // --- Animated Background Canvas ---
     const canvas = document.getElementById('bg-canvas');
@@ -1088,8 +1124,41 @@
         });
       });
     }
+    
+    // --- Lightbox Logic ---
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const scrollerImages = document.querySelectorAll('.scroller__inner li');
+
+    const openLightbox = (e) => {
+        const imgSrc = e.currentTarget.querySelector('img').src;
+        lightboxImg.src = imgSrc;
+        lightbox.classList.remove('hidden');
+        // Use a tiny timeout to allow the display property to apply before adding the class for the transition
+        setTimeout(() => lightbox.classList.add('show'), 10);
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeLightbox = () => {
+        lightbox.classList.remove('show');
+        // Wait for the transition to finish before hiding it
+        setTimeout(() => lightbox.classList.add('hidden'), 300);
+        document.body.style.overflow = '';
+    };
+
+    scrollerImages.forEach(img => img.addEventListener('click', openLightbox));
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+        // Close if the background is clicked, not the image itself
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
 
   </script>
 </body>
 </html>
+
 
