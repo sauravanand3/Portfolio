@@ -123,7 +123,7 @@
       border-radius: 999px;
       background-color: rgb(var(--bg-2));
     }
-    
+
     /* Project Details Expansion */
     #project-detail-container {
         grid-column: 1 / -1;
@@ -136,7 +136,7 @@
         max-height: 800px; /* Adjust as needed */
         padding: 1.5rem 0 0 0;
     }
-    
+
     /* --- Image Scroller --- */
     .scroller {
       -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
@@ -149,13 +149,14 @@
       padding-block: 1rem;
     }
     .scroller__inner li {
-      transition: transform .3s cubic-bezier(.2,.8,.2,1);
+      transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s cubic-bezier(.2,.8,.2,1);
       flex-shrink: 0;
       position: relative;
     }
     .scroller__inner li:hover {
-      transform: scale(1.05);
+      transform: scale(1.1);
       z-index: 10;
+      box-shadow: var(--elev);
     }
     .scroller[data-animated="true"] .scroller__inner {
       width: max-content;
@@ -207,7 +208,6 @@
     .btn-state-feedback {
       transition: background-color .3s, border-color .3s;
     }
-
   </style>
 </head>
 <body class="text-slate-200 antialiased">
@@ -328,7 +328,7 @@
   </section>
   
   <!-- VISUAL SCROLLER -->
-  <section class="relative py-12 md:py-16 overflow-hidden">
+  <section class="relative py-12 md:py-16">
     <div class="reveal text-center mb-10 px-4">
         <h2 class="text-3xl md:text-4xl font-bold"><span class="grad-text">Visual Showcase</span></h2>
         <p class="mt-2 text-slate-300 max-w-2xl mx-auto">A glimpse into the engineering and design process.</p>
@@ -773,6 +773,10 @@
 
 
   <script>
+    // Force page to start at the top on refresh
+    window.history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+
     // --- Animated Background Canvas ---
     const canvas = document.getElementById('bg-canvas');
     if (canvas) {
@@ -981,7 +985,7 @@
             card.classList.add('border-emerald-400/50');
         }
     });
-    
+
     function openProjectDetails(content, title) {
         detailContainer.innerHTML = `
             <div class="glass rounded-2xl p-6 relative reveal-pop show">
@@ -1015,7 +1019,7 @@
             detailContainer.innerHTML = '';
         }, 600);
     }
-    
+
     // --- Enhanced Resume Download Handler ---
     const downloadBtn = document.getElementById('downloadResumeBtn');
     const btnContentWrapper = document.getElementById('btn-content-wrapper');
@@ -1155,9 +1159,8 @@
             closeLightbox();
         }
     });
-
-
   </script>
 </body>
 </html>
+
 
