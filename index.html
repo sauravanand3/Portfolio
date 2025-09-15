@@ -136,6 +136,25 @@
         max-height: 800px; /* Adjust as needed */
         padding: 1.5rem 0 0 0;
     }
+    
+    .project-gallery {
+        max-height: 220px;
+        overflow-y: auto;
+        padding-right: 8px; /* space for scrollbar */
+    }
+
+    .project-gallery::-webkit-scrollbar {
+        width: 6px;
+    }
+    .project-gallery::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 3px;
+    }
+    .project-gallery::-webkit-scrollbar-thumb {
+        background: rgba(var(--brand), 0.5);
+        border-radius: 3px;
+    }
+
 
     /* --- Image Scroller --- */
     .scroller {
@@ -368,7 +387,7 @@
         <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" data-tags="architectural">
           <div class="relative">
               <img src="assets/Projects/G1-Building/Thumbnail.png" 
-                   alt="G+1 Residential Building Project" 
+                   alt="G+1 Residential Building Project Thumbnail" 
                    class="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
                    onerror="this.onerror=null;this.src='https://placehold.co/600x400/0c111d/e5e7eb?text=Project+Image';">
               <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -399,7 +418,7 @@
                 <img src="assets/Projects/G1-Building/FloorPlan.png" alt="Gallery image 1" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="assets/Projects/G1-Building/EastEle.png" alt="Gallery image 2" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="assets/Projects/G1-Building/3d4.png" alt="Gallery image 3" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
-                <img src="assets/Projects/G1-Building/3d6.png" alt="Gallery image 3" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
+                <img src="assets/Projects/G1-Building/3d16.png" alt="Gallery image 3" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="assets/Projects/G1-Building/1stFPlan.png" alt="Gallery image 3" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="assets/Projects/G1-Building/GFPlan.png" alt="Gallery image 1" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="assets/Projects/G1-Building/NorthEle.png" alt="Gallery image 2" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
@@ -408,6 +427,7 @@
                 <img src="assets/Projects/G1-Building/SouthEle.png" alt="Gallery image 2" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="assets/Projects/G1-Building/WestEle.png" alt="Gallery image 3" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
                 <img src="assets/Projects/G1-Building/3d5.png" alt="Gallery image 2" class="rounded-md cursor-pointer hover:opacity-80 transition-opacity">
+
             </div>
             <h4 class="font-bold text-lg text-white mt-4 mb-2">Tools Used:</h4>
             <div class="flex flex-wrap gap-2">
@@ -1128,7 +1148,7 @@
 
       const t = document.createElement('div');
       t.textContent = msg;
-      t.className = 'toast-notification fixed bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-2 rounded-xl shadow-xl z-[70]';
+      t.className = 'toast-notification fixed bottom-6 left-1/2 -translate-x-1.2 bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-2 rounded-xl shadow-xl z-[70]';
       document.body.appendChild(t);
       setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .6s'; }, 2800);
       setTimeout(() => t.remove(), 3500);
@@ -1154,9 +1174,12 @@
     // - alt: A short description of the image.
     const showcaseImages = [
       { src: 'assets/3d2gpb.png', alt: 'Blueprint design' },
+      { src: 'assets/ghs2.png', alt: 'Blueprint design' },
       { src: 'assets/AcademicFloorPlan.png', alt: 'Floor plan design' },
+      { src: 'assets/ghstructure.png', alt: 'Blueprint design' },
       { src: 'assets/3dd2gpb.png', alt: '3D BIM Model' },
       { src: 'assets/Workshop.png', alt: 'Workshop layout' },
+      { src: 'assets/ssfstructure.png', alt: 'Blueprint design' },
       { src: 'assets/3ddgpb.png', alt: 'Active construction site' },
       { src: 'assets/fp.png', alt: 'Final project render' }
       // Add more images here like this:
@@ -1274,17 +1297,23 @@
     function updateLightboxImage() {
         if (currentGallery.length > 0) {
             lightboxImg.src = currentGallery[currentIndex];
+            lightboxPrev.style.display = currentIndex === 0 ? 'none' : 'block';
+            lightboxNext.style.display = currentIndex === currentGallery.length - 1 ? 'none' : 'block';
         }
     }
 
     function showPrevImage() {
-        currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length;
-        updateLightboxImage();
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateLightboxImage();
+        }
     }
 
     function showNextImage() {
-        currentIndex = (currentIndex + 1) % currentGallery.length;
-        updateLightboxImage();
+        if (currentIndex < currentGallery.length - 1) {
+            currentIndex++;
+            updateLightboxImage();
+        }
     }
   </script>
 </body>
