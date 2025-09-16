@@ -223,20 +223,20 @@
     }
 
     /* Lightbox Styles */
-    #lightbox {
+    .lightbox-modal {
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
       pointer-events: none;
     }
-    #lightbox.show {
+    .lightbox-modal.show {
       opacity: 1;
       pointer-events: auto;
     }
-    #lightbox-img {
+    .lightbox-modal > * {
       transform: scale(0.9);
       transition: transform 0.3s ease-in-out;
     }
-    #lightbox.show #lightbox-img {
+    .lightbox-modal.show > * {
       transform: scale(1);
     }
 
@@ -316,7 +316,7 @@
             <span class="block text-2xl sm:text-3xl lg:text-4xl font-semibold text-emerald-400 mt-2">Civil Engineer & BIM Modeller</span>
           </h1>
           <p class="mt-5 text-slate-300 text-lg leading-relaxed">
-            I am a Civil Engineer and BIM Modeller specializing in structural design and sustainable construction. My approach is centered on transforming project constraints into efficient, sustainable, and build-ready designs.
+             I am a Civil Engineer and BIM Modeller specializing in structural design and sustainable construction. My approach is centered on transforming project constraints into efficient, sustainable, and build-ready designs.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a href="#projects" class="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-5 py-3 hover:from-emerald-400 hover:to-blue-500 focus-ring">
@@ -404,10 +404,13 @@
             </div>
         </div>
       </div>
-
+      
       <div id="projectGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Card 1 -->
-        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" data-tags="architectural">
+        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" 
+                 data-tags="architectural" 
+                 data-video-id="ScYIzmM_43I" 
+                 data-video-title="G+1 Residential Building Walkthrough">
           <div class="relative">
               <img src="assets/Projects/G1-Building/Thumbnail.png" 
                    alt="G+1 Residential Building Project Thumbnail" 
@@ -419,10 +422,16 @@
               <div class="tag mb-2 inline-block">Architectural</div>
               <h3 class="text-xl font-semibold text-white">G+1 Residential Building</h3>
               <p class="mt-2 text-slate-300 text-sm h-16">Architectural planning of a G+1 Residential Building.</p>
-              <button class="details-btn mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
-                  View Details
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+              <div class="mt-4 flex items-center gap-4">
+                <button class="details-btn inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 hover:text-emerald-300 transition-colors">
+                    View Details
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button class="video-btn inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/></svg>
+                    Watch Video
+                </button>
+              </div>
           </div>
           <!-- Hidden Detail Content -->
           <div class="project-full-details hidden">
@@ -433,14 +442,6 @@
               <li>Applied appropriate layers, materials, and textures for walls, slabs, roofs, openings, and finishes.</li>
               <li>Ensured all drawings complied with standard building codes.</li>
             </ul>
-            <h4 class="font-bold text-lg text-white mb-2">Video Link:</h4>
-            <a href="https://youtu.be/AQ4BWwHqRTA" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors mb-4">
-                Watch Project Video
-                <svg xmlns="https://youtu.be/AQ4BWwHqRTA" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-                </svg>
-            </a>
             <h4 class="font-bold text-lg text-white mb-2">Project Gallery:</h4>
             <div class="project-gallery grid grid-cols-2 sm:grid-cols-3 gap-2">
                 <div class="project-gallery-item">
@@ -508,7 +509,10 @@
         </article>
 
         <!-- Card 2 -->
-        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" data-tags="architectural">
+        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" 
+                 data-tags="architectural"
+                 data-video-id="i7eWpD_IIrE"
+                 data-video-title="Community Hall Fly-through">
           <div class="relative">
               <img src="assets/Projects/Community-Hall/Thumbnail.png" 
                    alt="Community Hall Project Thumbnail" 
@@ -520,10 +524,16 @@
               <div class="tag mb-2 inline-block">Architectural</div>
               <h3 class="text-xl font-semibold text-white">Community Hall Planning</h3>
               <p class="mt-2 text-slate-300 text-sm h-16">Quantity takeoff, cost estimation, and material rate analysis.</p>
-              <button class="details-btn mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">
-                  View Details
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+              <div class="mt-4 flex items-center gap-4">
+                <button class="details-btn inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-blue-300 transition-colors">
+                    View Details
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                 <button class="video-btn inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/></svg>
+                    Watch Video
+                </button>
+              </div>
           </div>
           <!-- Hidden Detail Content -->
           <div class="project-full-details hidden">
@@ -533,14 +543,6 @@
               <li>Performed rate analysis based on current market values for labor and materials.</li>
               <li>Prepared a comprehensive Bill of Quantities (BOQ) document.</li>
             </ul>
-             <h4 class="font-bold text-lg text-white mb-2">Video Link:</h4>
-            <a href="https://youtu.be/i7eWpD_IIrE" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors mb-4">
-                Watch Project Video
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-                </svg>
-            </a>
              <h4 class="font-bold text-lg text-white mb-2">Project Gallery:</h4>
             <div class="project-gallery grid grid-cols-2 sm:grid-cols-3 gap-2">
                 <div class="project-gallery-item">
@@ -564,7 +566,10 @@
         </article>
 
         <!-- Card 3 -->
-        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" data-tags="structural">
+        <article class="project-card group relative glass rounded-2xl hover-raise reveal-pop overflow-hidden" 
+                 data-tags="structural"
+                 data-video-id="mF2128sP1b4"
+                 data-video-title="Site Safety Protocol Overview">
           <div class="relative">
               <img src="assets/Projects/QA-Checklist/Thumbnail.png" 
                    alt="Site QA Checklist Project" 
@@ -576,10 +581,16 @@
               <div class="tag mb-2 inline-block">Structural</div>
               <h3 class="text-xl font-semibold text-white">Site QA Checklist</h3>
               <p class="mt-2 text-slate-300 text-sm h-16">Overseeing concrete testing, steel checks, and safety compliance.</p>
-              <button class="details-btn mt-4 inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
-                  View Details
-                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </button>
+              <div class="mt-4 flex items-center gap-4">
+                <button class="details-btn inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                    View Details
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                 <button class="video-btn inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/><path d="M6.271 5.055a.5.5 0 0 1 .52.038l3.5 2.5a.5.5 0 0 1 0 .814l-3.5 2.5A.5.5 0 0 1 6 10.5v-5a.5.5 0 0 1 .271-.445"/></svg>
+                    Watch Video
+                </button>
+              </div>
           </div>
           <!-- Hidden Detail Content -->
           <div class="project-full-details hidden">
@@ -589,14 +600,6 @@
               <li>Included protocols for slump tests, cube testing, and rebar inspection.</li>
               <li>Outlined mandatory safety measures for excavation and formwork.</li>
             </ul>
-            <h4 class="font-bold text-lg text-white mb-2">Video Link:</h4>
-            <a href="https://youtu.be/mF2128sP1b4" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-sm font-semibold text-cyan-400 hover:text-cyan-300 transition-colors mb-4">
-                Watch Project Video
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
-                    <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
-                </svg>
-            </a>
             <h4 class="font-bold text-lg text-white mb-2">Project Gallery:</h4>
             <div class="project-gallery grid grid-cols-2 sm:grid-cols-3 gap-2">
                 <div class="project-gallery-item">
@@ -919,11 +922,19 @@
   </footer>
 
   <!-- Lightbox Modal -->
-  <div id="lightbox" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+  <div id="lightbox" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 lightbox-modal">
     <button id="lightbox-close" class="absolute top-6 right-6 text-white text-5xl z-10 leading-none focus-ring rounded-full w-12 h-12 hover:bg-white/10 transition-colors">&times;</button>
     <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl z-10 leading-none focus-ring rounded-full w-12 h-12 hover:bg-white/10 transition-colors">&lt;</button>
     <img id="lightbox-img" src="" alt="Showcase Image" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
     <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl z-10 leading-none focus-ring rounded-full w-12 h-12 hover:bg-white/10 transition-colors">&gt;</button>
+  </div>
+  
+  <!-- Project Video Modal -->
+  <div id="project-video-modal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 lightbox-modal">
+      <button id="project-video-close" class="absolute top-6 right-6 text-white text-5xl z-10 leading-none focus-ring rounded-full w-12 h-12 hover:bg-white/10 transition-colors">&times;</button>
+      <div class="w-full max-w-4xl aspect-video glass rounded-2xl overflow-hidden">
+          <iframe id="project-video-player" class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
   </div>
 
 
@@ -1077,7 +1088,7 @@
     }
 
     // Active nav link on scroll
-    const sections = ['home','about','projects','skills','timeline','contact'].map(id => document.getElementById(id));
+    const sections = ['home','about', 'video-showcase', 'projects','skills','timeline','contact'].map(id => document.getElementById(id));
     const navLinks = Array.from(document.querySelectorAll('header .nav-link'));
     const setActive = () => {
       let current = 'home';
@@ -1123,22 +1134,26 @@
 
     projectGrid.addEventListener('click', (e) => {
         const detailsBtn = e.target.closest('.details-btn');
-        if (!detailsBtn) return;
+        const videoBtn = e.target.closest('.video-btn');
+        
+        if (detailsBtn) {
+            const card = detailsBtn.closest('.project-card');
+            const detailsContent = card.querySelector('.project-full-details').innerHTML;
+            const cardTitle = card.querySelector('h3') ? card.querySelector('h3').textContent : 'Project Details';
 
-        const card = detailsBtn.closest('.project-card');
-        const detailsContent = card.querySelector('.project-full-details').innerHTML;
-        const cardTitle = card.querySelector('h3') ? card.querySelector('h3').textContent : 'Project Details';
-
-
-        if (currentOpenCard === card) {
-            closeProjectDetails();
-        } else {
-            currentOpenCard = card;
-            openProjectDetails(card, detailsContent, cardTitle);
-            
-            // Highlight active card
-            projectGrid.querySelectorAll('.project-card').forEach(c => c.classList.remove('border-emerald-400/50'));
-            card.classList.add('border-emerald-400/50');
+            if (currentOpenCard === card) {
+                closeProjectDetails();
+            } else {
+                currentOpenCard = card;
+                openProjectDetails(card, detailsContent, cardTitle);
+                projectGrid.querySelectorAll('.project-card').forEach(c => c.classList.remove('border-emerald-400/50'));
+                card.classList.add('border-emerald-400/50');
+            }
+        } else if (videoBtn) {
+             const card = videoBtn.closest('.project-card');
+             const videoId = card.dataset.videoId;
+             const videoTitle = card.dataset.videoTitle;
+             openProjectVideo(videoId, videoTitle);
         }
     });
 
@@ -1248,7 +1263,7 @@
 
       const t = document.createElement('div');
       t.textContent = msg;
-      t.className = 'toast-notification fixed bottom-6 left-1/2 -translate-x-1.2 bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-2 rounded-xl shadow-xl z-[70]';
+      t.className = 'toast-notification fixed bottom-6 left-1/2 -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-2 rounded-xl shadow-xl z-[70]';
       document.body.appendChild(t);
       setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .6s'; }, 2800);
       setTimeout(() => t.remove(), 3500);
@@ -1268,27 +1283,27 @@
     let currentIndex = 0;
 
     // --- CONTENT YOU CAN EASILY EDIT ---
-
-    // To change the images in the visual showcase, edit this list.
-    // - src: The path to your image in the 'assets' folder.
-    // - alt: A short description of the image.
     const showcaseImages = [
       { src: 'assets/3d2gpb.png', alt: 'G+3 GPB BIM model' },
       { src: 'assets/ghs2.png', alt: 'G+3 Girls hostel structural model' },
+      { src: 'assets/cmmodel.jpg', alt: 'Proud moment showcasing our model to CM Nitish Kumar and dignitaries.' },
       { src: 'assets/AcademicFloorPlan.png', alt: 'Academic building floor plan design' },
+      { src: 'assets/model.jpg', alt: 'Mini model of college campus' },
       { src: 'assets/ghstructure.png', alt: 'G+3 Girls hostel structural model' },
       { src: 'assets/3dd2gpb.png', alt: 'BIM model of academic building' },
       { src: 'assets/Workshop.png', alt: 'Workshop layout' },
       { src: 'assets/ssfstructure.png', alt: 'G+3 Staff quarter structural drawing' },
       { src: 'assets/3ddgpb.png', alt: 'GPB render' },
       { src: 'assets/fp.png', alt: 'G+2 building floor plan' }
-      // Add more images here like this:
-      // { src: 'assets/my-new-image.jpg', alt: 'A description' },
+    ];
+
+    const showcaseVideos = [
+        { id: 'ScYIzmM_43I', title: 'G+1 Residential Building Walkthrough' },
+        { id: 'i7eWpD_IIrE', title: 'Community Hall Fly-through' },
+        { id: 'mF2128sP1b4', title: 'Site Safety Protocol Overview' }
     ];
 
     // --- SCRIPT INITIALIZATION ---
-
-    // This function builds the showcase from the list above
     function populateShowcase() {
       const showcaseList = document.getElementById('showcase-list');
       if (!showcaseList) return;
@@ -1298,11 +1313,9 @@
         const listItem = document.createElement('li');
         const img = document.createElement('img');
         
-        // --- LAZY LOADING IMPLEMENTATION ---
         img.classList.add('lazy');
         img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         img.dataset.src = image.src;
-        // --- END OF IMPLEMENTATION ---
         
         img.alt = image.alt;
         listItem.appendChild(img);
@@ -1318,9 +1331,9 @@
       initializeScroller();
       initializeLightbox();
       initializeLazyLoading();
+      initializeVideoPlayer();
     }
     
-    // Call the function to build the showcase when the page loads
     document.addEventListener('DOMContentLoaded', populateShowcase);
 
 
@@ -1380,6 +1393,66 @@
       });
       lazyImages.forEach(image => imageObserver.observe(image));
     }
+    
+    let currentVideoIndex = 0;
+    const playerEl = document.getElementById('youtube-player');
+    const videoTitleEl = document.getElementById('video-title');
+    const videoPrevBtn = document.getElementById('video-prev-btn');
+    const videoNextBtn = document.getElementById('video-next-btn');
+
+    function initializeVideoPlayer() {
+        if(!playerEl) return;
+        loadVideo(currentVideoIndex);
+        videoPrevBtn.addEventListener('click', () => {
+            if (currentVideoIndex > 0) {
+                currentVideoIndex--;
+                loadVideo(currentVideoIndex);
+            }
+        });
+        videoNextBtn.addEventListener('click', () => {
+             if (currentVideoIndex < showcaseVideos.length - 1) {
+                currentVideoIndex++;
+                loadVideo(currentVideoIndex);
+            }
+        });
+    }
+
+    function loadVideo(index) {
+        const video = showcaseVideos[index];
+        playerEl.src = `https://www.youtube.com/embed/${video.id}?autoplay=1&mute=1&loop=1&playlist=${video.id}&controls=0`;
+        videoTitleEl.textContent = video.title;
+
+        videoPrevBtn.style.display = index === 0 ? 'none' : 'block';
+        videoNextBtn.style.display = index === showcaseVideos.length - 1 ? 'none' : 'block';
+    }
+    
+    const projectVideoModal = document.getElementById('project-video-modal');
+    const projectVideoPlayer = document.getElementById('project-video-player');
+    const projectVideoClose = document.getElementById('project-video-close');
+
+    function openProjectVideo(videoId) {
+        projectVideoPlayer.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0`;
+        projectVideoModal.classList.remove('hidden');
+        setTimeout(() => projectVideoModal.classList.add('show'), 10);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeProjectVideo() {
+        projectVideoModal.classList.remove('show');
+        setTimeout(() => {
+            projectVideoModal.classList.add('hidden');
+            projectVideoPlayer.src = "";
+        }, 300);
+        document.body.style.overflow = '';
+    }
+
+    projectVideoClose.addEventListener('click', closeProjectVideo);
+    projectVideoModal.addEventListener('click', (e) => {
+        if (e.target === projectVideoModal) {
+            closeProjectVideo();
+        }
+    });
+
 
     function openLightbox(gallery, index) {
         if (!gallery || gallery.length === 0) return;
@@ -1424,5 +1497,4 @@
   </script>
 </body>
 </html>
-
 
